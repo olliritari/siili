@@ -1,22 +1,34 @@
 /**
- * Erittäin simppeli hahmotelma pääohjelman testaamiseksi.
+ * Tässä yksinkertaiset testit pääohjelman metodeille.
  * En ole koskaan aiemmin kirjoittanut testejä javalla.
- * Löysin mockito-kirjaston jolla voi testata mm. alkaako tietty String tietyllä tavalla.
- * Tämän opetteluun olisi mennyt kuitenkin pidempään kuin tähän tehtävään on järkevää käyttää.
  * Created by Olli Ritari on 24/02/2018.
  */
 
-import java.io.PrintStream;
+import static org.junit.Assert.*;
 import org.junit.Test;
-import static org.mockito.*;
+import java.io.*;
+import java.util.*;
 
 public class PrintDfTest {
-    
+    String wantedLine = "testing text";
+    String wrongLine = "wrong text";
+    ArrayList<String> mockList = new ArrayList<String>();
+
     @Test
-    public void testMain() {
-        PrintStream out = mock(PrintStream.class);
-        System.setOut(out);
-        testClass.main(new String[]{});
-        verify(out).println(startsWith("Filesystem"));
+    public void testGetLine() {
+        mockList.add("headerline");
+        mockList.add("testing text");
+        PrintDf printDf = new PrintDf();
+        assertTrue(printDf.getLine(wantedLine,mockList));
+        assertFalse(printDf.getLine(wrongLine, mockList));
+    }
+
+    @Test
+    public void testRemoveLine() {
+        mockList.add("headerline");
+        mockList.add("testing text");
+        PrintDf printDf = new PrintDf();
+        assertTrue(printDf.removeLine(wantedLine,mockList));
+        assertFalse(printDf.removeLine(wrongLine, mockList));
     }
 }

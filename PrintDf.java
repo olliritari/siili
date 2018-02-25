@@ -10,8 +10,8 @@ public class PrintDf {
     public static void main (String[] args) {
 
         String s = null;
-        ArrayList output = new ArrayList();
-        ArrayList errors = new ArrayList();
+        ArrayList<String> output = new ArrayList<String>();
+        ArrayList<String> errors = new ArrayList<String>();
 
         //Try-catch välttää ohelman kaatumisen ja hallitsee mahdolliset poikkeustilanteet
         try {
@@ -81,38 +81,20 @@ public class PrintDf {
             if (input == 1) {
                 System.out.println("Anna haettavan Filesystem-sarakkeen nimi:");
                 wanted = reader.nextLine();
-                //Käydään tulosteen rivit yksitellen läpi ja verrataan haluttuun arvoon
-                //Ei verrata ensimmäiseen riiviin, koska se on otsikkorivi
-                for (int j = 1; j < output.size(); j++){
-                    String current = output.get(j).toString();
-                    //Jos vastaavuus löytyy tulostetaan haluttu rivi
-                    if (current.substring(0, wanted.length()).equals(wanted)){
-                        System.out.println(output.get(0));
-                        System.out.println(current);
-                        match = true;
-                    }
-                }
+
+                //Haetaan tulostettava rivi metodilla
+                match = getLine(wanted,output);
                 //Jos vastinetta ei löytynyt, kerrotaan käyttäjälle
-                if (!match)
+                if(!match)
                     System.out.println("Haluamaasi riviä ei löytynyt.");
             }
+
             if (input == 2){
                 System.out.println("Anna poistettavan Filesystem-sarakkeen nimi:");
                 wanted = reader.nextLine();
-                //Käydään tulosteen rivit yksitellen läpi ja verrataan haluttuun arvoon
-                for (int j = 1; j < output.size(); j++){
-                    String current = output.get(j).toString();
-                    //Jos vastaavuus löytyy poistetaan haluttu rivi ja tulostetaan jäljelle jäänyt raportti
-                    if (current.substring(0, wanted.length()).equals(wanted)){
-                        output.remove(j);
-                        match = true;
-                        System.out.println("Rivi poistettu.");
-                        System.out.println("Raportin sisältö nyt:");
-                        for(int i = 0; i < output.size(); i++) {
-                            System.out.println(output.get(i));
-                        }
-                    }
-                }
+
+                //Haetaan poistettava rivi metodilla
+                match = removeLine(wanted, output);
                 //Jos vastinetta ei löytynyt, kerrotaan käyttäjälle
                 if (!match)
                     System.out.println("Haluamaasi riviä ei löytynyt.");
@@ -122,5 +104,50 @@ public class PrintDf {
         while (input != 3);
 
         reader.close();
+    }
+
+    //Metodi rivin etsimiselle
+    public static boolean getLine(String wanted, ArrayList output){
+        boolean gotMatch = false;
+        //Käydään tulosteen rivit yksitellen läpi ja verrataan haluttuun arvoon
+        //Ei verrata ensimmäiseen riiviin, koska se on otsikkorivi
+        for (int j = 1; j < output.size(); j++){
+            String current = output.get(j).toString();
+            //Jos vastaavuus löytyy tulostetaan haluttu rivi
+            if (current.substring(0, wanted.length()).equals(wanted)){
+                System.out.println(output.get(0));
+                System.out.println(current);
+                gotMatch = true;
+            }
+        }
+
+        if (!gotMatch)
+            return false;
+        else
+            return true;
+    }
+
+    //Metodi rivin poistamiselle
+    public static boolean removeLine(String wanted, ArrayList output){
+        boolean gotMatch = false;
+        //Käydään tulosteen rivit yksitellen läpi ja verrataan haluttuun arvoon
+        for (int j = 1; j < output.size(); j++){
+            String current = output.get(j).toString();
+            //Jos vastaavuus löytyy poistetaan haluttu rivi ja tulostetaan jäljelle jäänyt raportti
+            if (current.substring(0, wanted.length()).equals(wanted)){
+                output.remove(j);
+                gotMatch = true;
+                System.out.println("Rivi poistettu.");
+                System.out.println("Raportin sisältö nyt:");
+                for(int i = 0; i < output.size(); i++) {
+                    System.out.println(output.get(i));
+                }
+            }
+        }
+
+        if (!gotMatch)
+            return false;
+        else
+            return true;
     }
 }
